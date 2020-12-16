@@ -1,5 +1,5 @@
 {
-  "root": "web-admin/build/",
+  "root": "web-client/build/",
   "clean_urls": false,
   "routes": {
     "/**": "index.html"
