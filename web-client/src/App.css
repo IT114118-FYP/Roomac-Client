@@ -36,3 +36,29 @@
     transform: rotate(360deg);
   }
 }
+
+#components-layout-demo-responsive .logo {
+  height: 32px;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 16px;
+}
+
+.site-layout-sub-header-background {
+  background: #fff;
+}
+
+.site-layout-background {
+  background: #fff;
+}
+
+#login .login-form-forgot {
+  float: right;
+}
+
+#login .ant-col-rtl .login-form-forgot {
+  float: left;
+}
+
+#login .login-form-button {
+  width: 100%;
+}
