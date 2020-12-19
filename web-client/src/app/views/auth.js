@@ -1,8 +1,7 @@
 import { Component } from "react";
 import { Form, Input, Button, Row, Col, Card, Spin, notification } from 'antd';
 import { MailOutlined, LockOutlined } from '@ant-design/icons';
-import { withRouter } from 'react-router-dom';
-import { axiosInstance } from '../../../api/axiosInstance';
+import { axiosInstance } from '../api/axiosInstance';
 
 const openNotificationWithIcon = () => {
   notification['error']({
@@ -12,7 +11,7 @@ const openNotificationWithIcon = () => {
   });
 };
 
-class AuthLayout extends Component {
+class AuthView extends Component {
   _isMounted = false;
 
   constructor(props) {
@@ -22,6 +21,7 @@ class AuthLayout extends Component {
     };
   }
   
+  // If user is already logged in already but still on '/login'
   componentDidMount() {
     this._isMounted = true;
     if (localStorage.getItem("authToken") == null) {
@@ -29,10 +29,8 @@ class AuthLayout extends Component {
     } else {
       axiosInstance
         .get("/api/users/me")
-        .then(() => this.props.history.push('/'))
-        .catch(() => {
-          this.setState({ loading: false });
-        });
+        .then((response) => this.props.onLoginSuccess(response.data))
+        .catch(() => this.setState({ loading: false }));
     }
   }
 
@@ -43,31 +41,45 @@ class AuthLayout extends Component {
   onFinish = values => {
     this._isMounted = true;
     this.setState({ loading: true });
+
     axiosInstance
       .post("/api/login", {
         email: values.email,
         password: values.password,
         device_name: "client pc",
       })
-      .then((response) => {
-        localStorage.setItem("authToken", response.data);
-        this.props.history.push('/');
+      .then((token) => {
+        // Store authToken
+        localStorage.setItem("authToken", token.data);
+
+        // Remove all notification. Example: Fail to login notification
+        notification.destroy();
+
+        // Get user data and return to parent
+        axiosInstance
+          .get("/api/users/me")
+          .then((user) => this.props.onLoginSuccess(user.data))
+          .catch(() => {});
       })
       .catch((error) => {
+        console.log("-> Login error: " + error);
+
+        // Set loading spin on login card
         this.setState({ loading: false });
-        openNotificationWithIcon();
-        console.log("Login catch: " + error);
+
+        // Open fail to login notification
+        openNotificationWithIcon();       
       });
   }
 
   render() {
     return (
-      <Row type="flex" justify="center" align="middle" style={{ minHeight: '100vh', backgroundColor: '#001529' }}>
+      <Row type="flex" justify="center" align="middle" style={{minHeight: '100vh', backgroundColor: '#001529'}}>
         <Col>
-          <div className="logo" style={{ display: 'flex', justifyContent: 'center', marginBottom: 15 }}>
+          <div className="logo" style={{display: 'flex', justifyContent: 'center', marginBottom: 15}}>
             <div>
-              <img src="/favicon.ico" width="40" height="40" style={{ marginRight: 15, marginBottom: 15 }} alt="favicon" />
-              <i style={{ color: 'white', fontSize: 36 }}>roomac</i>
+              <img src="/favicon.ico" width="40" height="40" style={{marginRight: 15, marginBottom: 15}} alt="favicon" />
+              <i style={{color: 'white', fontSize: 36}}>roomac</i>
             </div>
           </div>
 
@@ -109,7 +121,7 @@ class AuthLayout extends Component {
                   />
                 </Form.Item>
 
-                <Form.Item style={{ marginBottom: 0 }}>
+                <Form.Item style={{marginBottom: 0}}>
                   <Button type="primary" htmlType="submit" className="login-form-button">
                     Log in
                   </Button>
@@ -123,4 +135,4 @@ class AuthLayout extends Component {
   }
 }
 
-export default withRouter(AuthLayout)
+export default AuthView
