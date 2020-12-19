@@ -57,7 +57,7 @@ class DefaultView extends Component {
           </Menu>
           </Sider>
           <Layout>
-            <Header className="site-layout-sub-header-background" style={{paddingRight: 15, display: 'flex', justifyContent: 'right'}}>
+            <Header className="site-layout-sub-header-background" style={{paddingRight: 15, display: 'flex', justifyContent: 'flex-end'}}>
               Welcome {this.props.user.first_name} {this.props.user.last_name} 
 
               <Button type="dashed" icon={<LogoutOutlined />} style={{marginTop: 15, marginLeft: 15 }} onClick={this.showPromiseConfirm}>
