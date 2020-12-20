@@ -94,19 +94,12 @@ class ResourceView extends Component {
                   <List.Item
                     key={item.id}
                     actions={[<Button type="primary" icon={<PlusCircleOutlined />} onClick={this.onCreateBookingButtonClick.bind(this, item)}>Create Booking</Button>]}
-                    extra={
-                      <img
-                        width={170}
-                        alt="logo"
-                        src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
-                      />
-                    }
+                    extra={item.image_url && <img width={170} alt="logo" src={item.image_url} />}
                   >
                     <List.Item.Meta
                       title={getTitle(item)}
                       description={item.branch_id}
                     />
-                    
                   </List.Item>
                 )}
               />
