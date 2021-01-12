@@ -1,8 +1,10 @@
 import { React, Component } from "react";
 import { axiosInstance } from '../api/axiosInstance';
 import { BrowserRouter as Prompt } from "react-router-dom";
-import { Button, Steps, Spin, Space, Divider, Result } from 'antd';
+import { Button, Steps, Spin, Space, Divider, Result, Checkbox } from 'antd';
 import { MinusOutlined, RightOutlined } from '@ant-design/icons';
+import { getTranslatedString } from '../i18n/func'
+import ReactMarkdown from 'react-markdown'
 
 import FullCalendar from '@fullcalendar/react';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -10,13 +12,12 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 
 const { Step } = Steps;
 
-const getTitle = (item) => {
+const getItemTitle = (item) => {
+  const translated = getTranslatedString(item, 'title')
   return (
     <>
-      {item.title_en}
-      {item.title_en === '' ? '' : '/' + item.title_hk} 
-      {item.title_hk === '' ? '' : '/' + item.title_cn} 
-      {item.title_en === '' && item.title_hk === '' && item.title_cn === '' ? '' : <MinusOutlined style={{marginLeft: 5, marginRight: 5}} />}
+      {translated}
+      {!translated || translated === '' ? '' : <MinusOutlined style={{marginLeft: 5, marginRight: 5}} />}
       {item.number}
     </>
   )
@@ -32,13 +33,15 @@ class BookingStepsView extends Component {
       slotMinTime: '00:00:00',
       slotMaxTime: '24:00:00',
       loading: true,
+      tosChecked: false,
+      nextDisabled: false,
     };
   }
 
   componentDidMount() {
     // Load resource bookings
     axiosInstance
-      .get([this.props.apiUrl, this.props.resource.id, 'bookings'].join("/"))
+      .get(['/api/resources', this.props.resource.id, 'bookings'].join("/"))
       .then((bookings) => {
         this.setState({
           bookings: bookings.data,
@@ -54,7 +57,7 @@ class BookingStepsView extends Component {
 
   onBackClick() {
     if (this.state.current > 1) {
-      this.setState({ current: this.state.current - 1 })
+      this.setState({ current: this.state.current - 1, nextDisabled: false })
     } else {
      this.props.unsetResource()
     }
@@ -65,6 +68,10 @@ class BookingStepsView extends Component {
     if (this.state.current < this.state.steps.length - 1) {
       this.setState({ current: this.state.current + 1 })
     }
+  }
+
+  onTosCheckboxChange(e) {
+    this.setState({ tosChecked: e.target.checked, nextDisabled: false });
   }
 
   onSelect(selectionInfo) {
@@ -106,9 +113,18 @@ class BookingStepsView extends Component {
             </Spin>
           )
         case 2:
+          if (!this.state.tosChecked && !this.state.nextDisabled) {
+            this.setState({ nextDisabled: true });
+          }
+
           return (
             <>
-            Terms & Conditions
+              <h2>Terms & Conditions</h2>
+              <ReactMarkdown>
+                {getTranslatedString(this.props.resource.tos, 'tos')}
+              </ReactMarkdown>
+
+              <Checkbox checked={this.state.tosChecked} onChange={this.onTosCheckboxChange.bind(this)}>Checkbox</Checkbox>
             </>
           )
         case 3:
@@ -142,12 +158,12 @@ class BookingStepsView extends Component {
       <>
         <Prompt when={true} message='You have unsaved changes, are you sure you want to leave?' />
 
-        <h1>{this.props.catagoryTitle} <RightOutlined style={{marginLeft: 5, marginRight: 5, marginBottom: 15}} /> {getTitle(this.props.resource)}</h1>
+        <h1>{this.props.catagoryTitle} <RightOutlined style={{marginLeft: 5, marginRight: 5, marginBottom: 15}} /> {getItemTitle(this.props.resource)}</h1>
         <Steps current={this.state.current} size="small" style={{marginBottom: 15}}>{steps}</Steps>
 
         <Space style={{display: 'flex', justifyContent: 'flex-end', marginBottom: 15}}>
           <Button size="large" onClick={this.onBackClick.bind(this)}>Back</Button>
-          <Button size="large" onClick={this.onNextClick.bind(this)} type="primary">Next</Button>
+          <Button size="large" onClick={this.onNextClick.bind(this)} type="primary" disabled={this.state.nextDisabled}>Next</Button>
         </Space>
 
         <Divider />

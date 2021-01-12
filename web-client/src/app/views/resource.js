@@ -1,25 +1,29 @@
 import React from 'react';
 import { Component } from "react";
+import { withTranslation } from 'react-i18next';
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { axiosInstance } from '../api/axiosInstance';
 import { PlusCircleOutlined, MinusOutlined } from '@ant-design/icons';
-import { List, Skeleton, Empty, Button } from 'antd';
+import { List, Skeleton, Empty, Button, Space } from 'antd';
+import { getTranslatedString } from '../i18n/func';
+import { GrLocation } from 'react-icons/gr';
 
 import BookingStepsView from './bookingSteps';
 
-const getTitle = (item) => {
+const getItemTitle = (item) => {
+  const translated = getTranslatedString(item, 'title')
   return (
     <>
-      {item.title_en}
-      {item.title_en === '' ? '' : '/' + item.title_hk} 
-      {item.title_hk === '' ? '' : '/' + item.title_cn} 
-      {item.title_en === '' && item.title_hk === '' && item.title_cn === '' ? '' : <MinusOutlined style={{marginLeft: 5, marginRight: 5}} />}
+      {translated}
+      {!translated || translated === '' ? '' : <MinusOutlined style={{marginLeft: 5, marginRight: 5}} />}
       {item.number}
     </>
   )
 }
 
 class ResourceView extends Component {
+  _isMounted = false;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -30,14 +34,18 @@ class ResourceView extends Component {
   }
 
   componentDidMount() {
+    this._isMounted = true;
     // Load resources
     axiosInstance
-      .get(this.props.apiUrl)
+      .get('api/categories/' + this.props.category.id)
       .then((resources) => {
-        this.setState({ loading: false, resources: resources.data })
-        console.log('-> Resources Loaded - ', this.props.catagoryTitle, this.state.resources);
+        if (this._isMounted) this.setState({ loading: false, resources: resources.data })
       })
-      .catch(() => this.setState({ loading: false }));
+      .catch(() => { if (this._isMounted) this.setState({ loading: false }) });
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   onCreateBookingButtonClick(resource) {
@@ -49,10 +57,13 @@ class ResourceView extends Component {
   }
 
   render() {
+    let title = this.props.category['title_' + this.props.i18n.language];
+    title = title && title.length > 0 ? title : this.props.category.title_en;
+
     if (this.state.loading) {
       return (
         <div>
-          <h1>{this.props.catagoryTitle}</h1>
+          <h1>{title}</h1>
           <Skeleton active />
         </div>
       )
@@ -62,8 +73,8 @@ class ResourceView extends Component {
       return (
         <Router>
           <Switch>
-            <Route exact path="/venues">
-              <BookingStepsView catagoryTitle={this.props.catagoryTitle} apiUrl={this.props.apiUrl} resource={this.state.resource} unsetResource={this.unsetResource.bind(this)}/>
+            <Route exact key={this.props.category.id} path={'/categories/' + this.props.category.id}>
+              <BookingStepsView category={this.props.category} resource={this.state.resource} unsetResource={this.unsetResource.bind(this)}/>
             </Route>
           </Switch>
         </Router>
@@ -74,8 +85,8 @@ class ResourceView extends Component {
     return (
       <Router>
         <Switch>
-          <Route exact path="/venues">
-            <h1>{this.props.catagoryTitle} ({this.state.resources.length} results)</h1>
+          <Route exact path={'/categories/' + this.props.category.id}>
+            <h1>{title} ({this.state.resources.length} {(this.props.t('results'))})</h1>
 
             { this.state.resources.length === 0 ? <Empty style={{marginTop: 15}} /> :
               <List
@@ -93,12 +104,17 @@ class ResourceView extends Component {
                 renderItem={item => (
                   <List.Item
                     key={item.id}
-                    actions={[<Button type="primary" icon={<PlusCircleOutlined />} onClick={this.onCreateBookingButtonClick.bind(this, item)}>Create Booking</Button>]}
+                    actions={[<Button type="primary" icon={<PlusCircleOutlined />} onClick={this.onCreateBookingButtonClick.bind(this, item)}>{this.props.t('createBooking')}</Button>]}
                     extra={item.image_url && <img width={170} alt="logo" src={item.image_url} />}
                   >
                     <List.Item.Meta
-                      title={getTitle(item)}
-                      description={item.branch_id}
+                      title={getItemTitle(item)}
+                      description={(
+                        <Space>
+                          <GrLocation style={{marginBottom: -2}} />
+                          <span>{getTranslatedString(item.branch, 'title')}</span>
+                        </Space>
+                      )}
                     />
                   </List.Item>
                 )}
@@ -111,4 +127,4 @@ class ResourceView extends Component {
   }
 }
 
-export default ResourceView
+export default withTranslation()(ResourceView)
