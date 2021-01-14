@@ -296,7 +296,7 @@ class BookingStepsView extends Component {
       if (this.state.steps[this.state.current] !== "bookingConfirmation") {
         return (
           <Space style={{display: 'flex', justifyContent: 'flex-end', marginBottom: 15}}>
-            <Button size="large" onClick={this.onBackClick.bind(this)}>{this.props.t('back')}</Button>
+            <Button size="large" onClick={this.onBackClick.bind(this)} disabled={this.state.loading}>{this.props.t('back')}</Button>
             <Button size="large" onClick={this.onNextClick.bind(this)} type="primary" disabled={this.state.nextDisabled} loading={this.state.loading}>{this.props.t(this.state.nextText)}</Button>
           </Space>
         )
