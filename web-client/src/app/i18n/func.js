@@ -7,7 +7,6 @@ const languages = {'en': 'English', 'hk': '繁體中文', 'cn': '简体中文'}
 
 const getTranslatedString = (obj, string) => {
   var translated = obj[string + '_' + i18n.language];
-  console.log(obj)
   return translated && translated.length > 0 ? translated : obj[string + '_en'];
 }
 
