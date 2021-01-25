@@ -27,6 +27,7 @@ const resources = {
       "bookingReference": "Booking reference number",
       "bookingSuccess": "Booking Success",
       "returnTo": "Return to",
+      "myCalendar": "My Calendar",
     }
   },
   hk: {
@@ -53,6 +54,7 @@ const resources = {
       "bookingReference": "記錄編號",
       "bookingSuccess": "預訂成功",
       "returnTo": "回到",
+      "myCalendar": "我的日曆",
     }
   },
   cn: {
@@ -79,6 +81,7 @@ const resources = {
       "bookingReference": "记录编号",
       "bookingSuccess": "预订成功",
       "returnTo": "回到",
+      "myCalendar": "我的日历",
     }
   },
 };

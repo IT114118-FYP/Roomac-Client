@@ -1,7 +1,6 @@
 import React from 'react';
 import { Component } from "react";
 import { withTranslation } from 'react-i18next';
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { axiosInstance } from '../api/axiosInstance';
 import { PlusCircleOutlined, MinusOutlined } from '@ant-design/icons';
 import { List, Skeleton, Empty, Button, Space } from 'antd';
@@ -71,58 +70,48 @@ class ResourceView extends Component {
 
     if (this.state.resource) {
       return (
-        <Router>
-          <Switch>
-            <Route exact key={this.props.category.id} path={'/categories/' + this.props.category.id}>
-              <BookingStepsView category={this.props.category} resource={this.state.resource} unsetResource={this.unsetResource.bind(this)}/>
-            </Route>
-          </Switch>
-        </Router>
+        <BookingStepsView key={this.props.category.id} category={this.props.category} resource={this.state.resource} unsetResource={this.unsetResource.bind(this)} setSelectedKeys={this.props.setSelectedKeys} />
       )
     }
 
     // https://ant.design/components/list/
     return (
-      <Router>
-        <Switch>
-          <Route exact path={'/categories/' + this.props.category.id}>
-            <h1>{title} ({this.state.resources.length} {(this.props.t('results'))})</h1>
+      <>
+        <h1>{title} ({this.state.resources.length} {(this.props.t('results'))})</h1>
 
-            { this.state.resources.length === 0 ? <Empty style={{marginTop: 15}} /> :
-              <List
-                itemLayout="vertical"
-                size="default"
-                pagination={{
-                  onChange: page => {
-                    console.log(page);
-                  },
-                  pageSize: 5,
-                  position: 'top',
-                }}
-                dataSource={this.state.resources}
-                footer={''}
-                renderItem={item => (
-                  <List.Item
-                    key={item.id}
-                    actions={[<Button type="primary" icon={<PlusCircleOutlined />} onClick={this.onCreateBookingButtonClick.bind(this, item)}>{this.props.t('createBooking')}</Button>]}
-                    extra={item.image_url && <img width={170} alt="logo" src={item.image_url} />}
-                  >
-                    <List.Item.Meta
-                      title={getItemTitle(item)}
-                      description={(
-                        <Space>
-                          <GrLocation style={{marginBottom: -2}} />
-                          <span>{getTranslatedString(item.branch, 'title')}</span>
-                        </Space>
-                      )}
-                    />
-                  </List.Item>
-                )}
-              />
-            }
-          </Route>
-        </Switch>
-      </Router>
+        { this.state.resources.length === 0 ? <Empty style={{marginTop: 15}} /> :
+          <List
+            itemLayout="vertical"
+            size="default"
+            pagination={{
+              onChange: page => {
+                console.log(page);
+              },
+              pageSize: 5,
+              position: 'top',
+            }}
+            dataSource={this.state.resources}
+            footer={''}
+            renderItem={item => (
+              <List.Item
+                key={item.id}
+                actions={[<Button type="primary" icon={<PlusCircleOutlined />} onClick={this.onCreateBookingButtonClick.bind(this, item)}>{this.props.t('createBooking')}</Button>]}
+                extra={item.image_url && <img width={170} alt="logo" src={item.image_url} />}
+              >
+                <List.Item.Meta
+                  title={getItemTitle(item)}
+                  description={(
+                    <Space>
+                      <GrLocation style={{marginBottom: -2}} />
+                      <span>{getTranslatedString(item.branch, 'title')}</span>
+                    </Space>
+                  )}
+                />
+              </List.Item>
+            )}
+          />
+        }
+      </>
     );
   }
 }

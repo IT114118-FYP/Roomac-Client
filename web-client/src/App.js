@@ -9,6 +9,8 @@ import { Row, Col, Spin } from 'antd';
 import AuthView from './app/views/auth';
 import DefaultView from './app/views/default';
 import ResourceView from './app/views/resource';
+import HomeView from './app/views/home';
+import CalendarView from './app/views/calendar';
 
 class App extends Component {
   constructor(props) {
@@ -91,7 +93,10 @@ class App extends Component {
             <DefaultView user={this.state.user} categories={this.state.categories} onLogout={this.handleLogout.bind(this)}>
               <Switch>
                 <Route exact path="/">
-                  <Home />
+                  <HomeView />
+                </Route>
+                <Route exact path="/calendar">
+                  <CalendarView user={this.state.user} />
                 </Route>
                 {categoryRoutes}
               </Switch>
@@ -101,10 +106,6 @@ class App extends Component {
       </Router>
     )
   };
-}
-
-function Home() {
-  return <h2>Home</h2>;
 }
 
 export default App;

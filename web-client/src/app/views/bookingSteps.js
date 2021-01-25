@@ -1,7 +1,7 @@
 import { React, Component } from "react";
 import { withTranslation } from 'react-i18next';
 import { axiosInstance } from '../api/axiosInstance';
-import { BrowserRouter as Prompt } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Alert, Button, Steps, Spin, Space, Divider, Result, Checkbox } from 'antd';
 import { MinusOutlined, RightOutlined } from '@ant-design/icons';
 import { getTranslatedString } from '../i18n/func'
@@ -30,12 +30,12 @@ const getEvents = (allow_times) => {
     let allow_time = allow_times[i];
     for (let date in allow_time) {
       let times = allow_time[date];
-      for (let i in times) {
-        if (!times[i].available) {
+      for (let j in times) {
+        if (!times[j].available) {
           events.push({
             title: 'Unavaliable',
-            start: date + 'T' + times[i].start_time,
-            end: date + 'T' + times[i].end_time,
+            start: date + 'T' + times[j].start_time,
+            end: date + 'T' + times[j].end_time,
             color: 'red',
           })
         }
@@ -62,6 +62,8 @@ const isSelectValid = (events, startTime, endTime) => {
 }
 
 class BookingStepsView extends Component {
+  _isMounted = false;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -69,6 +71,7 @@ class BookingStepsView extends Component {
       current: 1,
       bookings: [],
       events: [],
+      slotDuration: '00:30:00',
       slotMinTime: '00:00:00',
       slotMaxTime: '24:00:00',
       loading: true,
@@ -81,22 +84,30 @@ class BookingStepsView extends Component {
     };
   }
 
+  componentDidMount() {
+    this._isMounted = true;
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
   onBackClick() {
     if (this.state.current > 1) {
       const back = this.state.current - 1
-      this.setState({
+      if (this._isMounted) this.setState({
         current: back,
         nextDisabled: this.shouldNextDisable(back),
         nextText: 'next',
       })
     } else {
-     this.props.unsetResource()
+      this.props.unsetResource()
     }
   }
 
   onNextClick() {
     if (this.state.steps[this.state.current] === "verifyBooking") {
-      this.setState({ loading: true })
+      if (this._isMounted) this.setState({ loading: true })
 
       // Booking Confirmation!
       axiosInstance
@@ -106,7 +117,7 @@ class BookingStepsView extends Component {
         end: getLocalISOString(this.state.selectedEnd).substring(11) + ':00',
       })
       .then((bookingReference) => {
-        this.setState({
+        if (this._isMounted) this.setState({
           current: this.state.current + 1,
           bookingReference: bookingReference.data,
           loading: false
@@ -122,7 +133,7 @@ class BookingStepsView extends Component {
     if (this.state.current < this.state.steps.length - 1) {
       const next = this.state.current + 1
       const nextText = this.state.steps[next] === "verifyBooking" ? 'submit' : 'next'
-      this.setState({
+      if (this._isMounted) this.setState({
         current: next,
         nextDisabled: this.shouldNextDisable(next),
         nextText: nextText,
@@ -145,7 +156,7 @@ class BookingStepsView extends Component {
   onDatesSetChange(arg) {
     const start = arg.view.activeStart.toISOString().slice(0, 10)
     const end = arg.view.activeEnd.toISOString().slice(0, 10)
-    this.setState({ loading: true })
+    if (this._isMounted) this.setState({ events: [], loading: true })
 
     axiosInstance
       .get(['/api/resources', this.props.resource.id, `bookings?start=${start}&end=${end}`].join("/"))
@@ -161,7 +172,7 @@ class BookingStepsView extends Component {
           })
         }
 
-        this.setState({
+        if (this._isMounted) this.setState({
           bookings: bookings.data,
           events: events,
           loading: false,
@@ -174,7 +185,7 @@ class BookingStepsView extends Component {
   }
 
   onTosCheckboxChange(e) {
-    this.setState({ tosChecked: e.target.checked, nextDisabled: !e.target.checked })
+    if (this._isMounted) this.setState({ tosChecked: e.target.checked, nextDisabled: !e.target.checked })
   }
 
   // Add Your Booking Event
@@ -187,7 +198,7 @@ class BookingStepsView extends Component {
       color: 'blue',
     })
 
-    this.setState({
+    if (this._isMounted) this.setState({
       selectedStart: selectInfo.start,
       selectedEnd: selectInfo.end,
       events: events,
@@ -273,19 +284,15 @@ class BookingStepsView extends Component {
           )
         case "bookingConfirmation":
           return (
-            <>
-              <Result
-                status="success"
-                title={this.props.t('bookingSuccess')}
-                subTitle={<>{getItemTitle(this.props.resource)} <br /> {this.props.t('bookingReference')}: {this.state.bookingReference}</>}
-                extra={[
-                  <Button type="primary" key="console">
-                    Go to My Calender
-                  </Button>,
-                  <Button key="returnTo" onClick={this.props.unsetResource}>{this.props.t('returnTo')} {getTranslatedString(this.props.category, 'title')}</Button>,
-                ]}
-              />
-            </>
+            <Result
+              status="success"
+              title={this.props.t('bookingSuccess')}
+              subTitle={<>{getItemTitle(this.props.resource)} <br /> {this.props.t('bookingReference')}: {this.state.bookingReference}</>}
+              extra={[
+                <Button type="primary" key="console"><Link to="/calendar">{(this.props.t('myCalendar'))}</Link></Button>,
+                <Button key="returnTo" onClick={this.props.unsetResource}>{this.props.t('returnTo')} {getTranslatedString(this.props.category, 'title')}</Button>,
+              ]}
+            />
           )
         default: 
           return <></>
@@ -304,10 +311,10 @@ class BookingStepsView extends Component {
       return null
     }
 
+    // <Prompt when={true} message='You have unsaved changes, are you sure you want to leave?' />
+
     return (
       <>
-        <Prompt when={true} message='You have unsaved changes, are you sure you want to leave?' />
-
         <h1>{getTranslatedString(this.props.category, 'title')} <RightOutlined style={{marginLeft: 5, marginRight: 5, marginBottom: 15}} /> {getItemTitle(this.props.resource)}</h1>
         <Steps current={this.state.current} size="small" style={{marginBottom: 15}}>{steps}</Steps>
         {backNextButtons()}
