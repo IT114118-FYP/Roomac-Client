@@ -255,7 +255,7 @@ class BookingStepsView extends Component {
           return (
             <>
               <h2>{this.props.t('tos')}</h2>
-              <ReactMarkdown>
+              <ReactMarkdown renderers={{link: props => <a href={props.href} target="_blank" rel="noreferrer">{props.children}</a>}}>
                 {getTranslatedString(this.props.resource.tos, 'tos')}
               </ReactMarkdown>
 
