@@ -80,7 +80,7 @@ class BookingStepsView extends Component {
       nextDisabled: true,
       selectedStart: null,
       selectedEnd: null,
-      bookingReference: '',
+      bookingReference: null,
     };
   }
 
@@ -90,6 +90,12 @@ class BookingStepsView extends Component {
 
   componentWillUnmount() {
     this._isMounted = false;
+  }
+
+  backToSelectTime() {
+    if (this._isMounted) this.setState({
+      current: 1,
+    })
   }
 
   onBackClick() {
@@ -109,23 +115,31 @@ class BookingStepsView extends Component {
     if (this.state.steps[this.state.current] === "verifyBooking") {
       if (this._isMounted) this.setState({ loading: true })
 
-      // Booking Confirmation!
+      // Booking Confirmation...
       axiosInstance
-      .post(['/api/resources', this.props.resource.id, 'bookings'].join("/"), {
-        date: getLocalISOString(this.state.selectedStart).slice(0, -6),
-        start: getLocalISOString(this.state.selectedStart).substring(11) + ':00',
-        end: getLocalISOString(this.state.selectedEnd).substring(11) + ':00',
-      })
-      .then((bookingReference) => {
-        if (this._isMounted) this.setState({
-          current: this.state.current + 1,
-          bookingReference: bookingReference.data,
-          loading: false
+        .post(['/api/resources', this.props.resource.id, 'bookings'].join("/"), {
+          date: getLocalISOString(this.state.selectedStart).slice(0, -6),
+          start: getLocalISOString(this.state.selectedStart).substring(11) + ':00',
+          end: getLocalISOString(this.state.selectedEnd).substring(11) + ':00',
         })
-      })
-      .catch((e) => {
-        console.log(e)
-      });
+        // Success...
+        .then((bookingReference) => {
+          if (this._isMounted) this.setState({
+            current: this.state.current + 1,
+            bookingReference: bookingReference.data,
+            loading: false
+          })
+        })
+        // Error...
+        .catch((e) => {
+          if (this._isMounted) this.setState({
+            current: this.state.current + 1,
+            bookingReference: null,
+            selectedStart: null,
+            selectedEnd: null,
+            loading: false
+          })
+        })
 
       return
     }
@@ -283,17 +297,33 @@ class BookingStepsView extends Component {
             </>
           )
         case "bookingConfirmation":
-          return (
-            <Result
-              status="success"
-              title={this.props.t('bookingSuccess')}
-              subTitle={<>{getItemTitle(this.props.resource)} <br /> {this.props.t('bookingReference')}: {this.state.bookingReference}</>}
-              extra={[
-                <Button type="primary" key="console"><Link to="/calendar">{(this.props.t('myCalendar'))}</Link></Button>,
-                <Button key="returnTo" onClick={this.props.unsetResource}>{this.props.t('returnTo')} {getTranslatedString(this.props.category, 'title')}</Button>,
-              ]}
-            />
-          )
+          if (this.state.bookingReference !== null) {
+            // Success...
+            return (
+              <Result
+                status="success"
+                title={this.props.t('bookingSuccess')}
+                subTitle={<>{getItemTitle(this.props.resource)} <br /> {this.props.t('bookingReference')}: {this.state.bookingReference}</>}
+                extra={[
+                  <Button type="primary" key="console"><Link to="/calendar">{(this.props.t('myCalendar'))}</Link></Button>,
+                  <Button key="returnTo" onClick={this.props.unsetResource}>{this.props.t('returnTo')} {getTranslatedString(this.props.category, 'title')}</Button>,
+                ]}
+              />
+            )
+          } else {
+            // Error...
+            return (
+              <Result
+                status="error"
+                title={this.props.t('bookingFailed')}
+                subTitle={this.props.t('bookingFailedMessage')}
+                extra={[
+                  <Button type="primary" key="backToSelectTime" onClick={this.backToSelectTime.bind(this)}>{(this.props.t('reselectTime'))}</Button>,
+                  <Button key="returnTo" onClick={this.props.unsetResource}>{this.props.t('returnTo')} {getTranslatedString(this.props.category, 'title')}</Button>,
+                ]}
+              />
+            )
+          }
         default: 
           return <></>
       }

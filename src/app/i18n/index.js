@@ -26,8 +26,11 @@ const resources = {
       "bookingConfirmation": "Booking confirmation",
       "bookingReference": "Booking reference number",
       "bookingSuccess": "Booking Success",
+      "bookingFailed": "Booking Failed",
+      "bookingFailedMessage": "An error has occured, please try again.",
       "returnTo": "Return to",
       "myCalendar": "My Calendar",
+      "reselectTime": "Reselect time",
     }
   },
   hk: {
@@ -53,8 +56,11 @@ const resources = {
       "bookingConfirmation": "預訂結果",
       "bookingReference": "記錄編號",
       "bookingSuccess": "預訂成功",
+      "bookingFailed": "預訂失敗",
+      "bookingFailedMessage": "發生錯誤，請重試。",
       "returnTo": "回到",
       "myCalendar": "我的日曆",
+      "reselectTime": "重新選擇時間",
     }
   },
   cn: {
@@ -80,8 +86,11 @@ const resources = {
       "bookingConfirmation": "预订结果",
       "bookingReference": "记录编号",
       "bookingSuccess": "预订成功",
+      "bookingFailed": "预订失败",
+      "bookingFailedMessage": "发生错误，请重试。",
       "returnTo": "回到",
       "myCalendar": "我的日历",
+      "reselectTime": "重新选择时间",
     }
   },
 };
