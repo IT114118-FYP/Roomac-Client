@@ -61,7 +61,7 @@ class HomeView extends Component {
           renderItem={category => (
             <List.Item>
               <Link to={'/categories/' + category.id}>
-                <Card hoverable cover={<img alt={category.title_en} src={category.image_url.replace('/upload/', '/upload/ar_1.5,c_crop/')} />}>
+                <Card hoverable cover={<img alt={category.title_en} src={category.image_url?.replace('/upload/', '/upload/ar_1.5,c_crop/')} />}>
                   <Meta title={getTranslatedString(category, 'title')} description="" />
                 </Card>
               </Link>
