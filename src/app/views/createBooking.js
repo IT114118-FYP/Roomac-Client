@@ -4,8 +4,8 @@ import { axiosInstance } from '../api/axiosInstance';
 import { Link } from "react-router-dom";
 import { Alert, Button, Steps, Spin, Space, Divider, Result, Checkbox } from 'antd';
 import { MinusOutlined, RightOutlined } from '@ant-design/icons';
-import { getTranslatedString } from '../i18n/func'
-import ReactMarkdown from 'react-markdown'
+import { getTranslatedString } from '../i18n/func';
+import ReactMarkdown from 'react-markdown';
 
 import FullCalendar from '@fullcalendar/react';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -61,14 +61,14 @@ const isSelectValid = (events, startTime, endTime) => {
   return true;
 }
 
-class BookingStepsView extends Component {
+class CreateBookingView extends Component {
   _isMounted = false;
 
   constructor(props) {
     super(props);
     this.state = {
       steps: ["selectResource", "selectTime", "tos", "verifyBooking", "bookingConfirmation"],
-      current: 1,
+      current: props.step,
       bookings: [],
       events: [],
       slotDuration: '00:30:00',
@@ -86,6 +86,10 @@ class BookingStepsView extends Component {
 
   componentDidMount() {
     this._isMounted = true;
+
+    if (this.state.steps[this.state.current] === 'selectResource') {
+      this.setState({ loading: false, nextDisabled: false });
+    }
   }
 
   componentWillUnmount() {
@@ -99,7 +103,7 @@ class BookingStepsView extends Component {
   }
 
   onBackClick() {
-    if (this.state.current > 1) {
+    if (this.state.current > 0) {
       const back = this.state.current - 1
       if (this._isMounted) this.setState({
         current: back,
@@ -147,6 +151,7 @@ class BookingStepsView extends Component {
     if (this.state.current < this.state.steps.length - 1) {
       const next = this.state.current + 1
       const nextText = this.state.steps[next] === "verifyBooking" ? 'submit' : 'next'
+
       if (this._isMounted) this.setState({
         current: next,
         nextDisabled: this.shouldNextDisable(next),
@@ -158,6 +163,8 @@ class BookingStepsView extends Component {
 
   shouldNextDisable(step) {
     switch (this.state.steps[step]) {
+      case "selectResource":
+        return false
       case "selectTime":
         return this.state.selectedStart === null && this.state.selectedEnd === null
       case "tos":
@@ -229,7 +236,7 @@ class BookingStepsView extends Component {
     const steps = this.state.steps.map((step, i) => step = <Step key={i} title={this.props.t(step)} />);
     const alertMessage = (
       <>
-        <span style={{marginRight: 5}}>Date and time:</span>
+        <span style={{marginRight: 5}}>{this.props.t('selectedDateTime')}</span>
         {getLocalISOString(this.state.selectedStart)}
         <MinusOutlined style={{marginLeft: 5, marginRight: 5, paddingTop: 5}} />
         {getLocalISOString(this.state.selectedEnd)}
@@ -242,10 +249,21 @@ class BookingStepsView extends Component {
 
     const stepBodys = () => {
       switch (this.state.steps[this.state.current]) {
+        case "selectResource":
+          return (
+            <>
+              <Alert message={
+                <>
+                  {getItemTitle(this.props.resource)}
+                </>
+              } type="success" style={{marginBottom: 15}} showIcon />
+            </>
+          )
         case "selectTime":
           return (
             <>
               <Alert message={alertMessage} type="info" style={{marginBottom: 15}} showIcon />
+
               <Spin spinning={this.state.loading}>
                 <FullCalendar
                   locale={this.props.i18n.language}
@@ -355,4 +373,4 @@ class BookingStepsView extends Component {
   }
 }
 
-export default withTranslation()(BookingStepsView)
+export default withTranslation()(CreateBookingView)

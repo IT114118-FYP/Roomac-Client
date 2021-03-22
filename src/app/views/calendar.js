@@ -4,9 +4,11 @@ import { withTranslation } from 'react-i18next';
 import { axiosInstance } from '../api/axiosInstance';
 import { Spin } from 'antd';
 import { getTranslatedString } from '../i18n/func';
+import moment from 'moment';
 
 import FullCalendar from '@fullcalendar/react';
 import timeGridPlugin from '@fullcalendar/timegrid';
+import dayGridPlugin from '@fullcalendar/daygrid';
 
 class CalendarView extends Component {
   _isMounted = false;
@@ -32,8 +34,9 @@ class CalendarView extends Component {
   }
 
   onDatesSetChange(arg) {
-    const start = arg.view.activeStart.toISOString().slice(0, 10)
-    const end = arg.view.activeEnd.toISOString().slice(0, 10)
+    const start = moment(arg.view.activeStart).format("YYYY-MM-DD");
+    const end = moment(arg.view.activeEnd).format("YYYY-MM-DD");
+
     this.setState({ events: [], loading: true })
 
     axiosInstance
@@ -43,7 +46,7 @@ class CalendarView extends Component {
         for (let i in bookings.data) {
           let booking = bookings.data[i];
           events.push({
-            title: getTranslatedString(booking.resource, 'title'),
+            title: booking.resource.number + ' • ' + getTranslatedString(booking.resource, 'title'),
             start: booking.start_time,
             end: booking.end_time,
             color: 'blue',
@@ -68,8 +71,8 @@ class CalendarView extends Component {
         <Spin spinning={this.state.loading}>
           <FullCalendar
             locale={this.props.i18n.language}
-            plugins={[timeGridPlugin]}
-            initialView="timeGridWeek"
+            plugins={[timeGridPlugin, dayGridPlugin]}
+            initialView="dayGridMonth"
             allDaySlot={false}
             slotDuration={this.state.slotDuration}
             slotMinTime={this.state.slotMinTime}

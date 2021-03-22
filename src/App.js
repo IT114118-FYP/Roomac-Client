@@ -11,6 +11,7 @@ import DefaultView from './app/views/default';
 import ResourceView from './app/views/resource';
 import HomeView from './app/views/home';
 import CalendarView from './app/views/calendar';
+import BookingsView from './app/views/bookings';
 
 class App extends Component {
   constructor(props) {
@@ -94,6 +95,9 @@ class App extends Component {
               <Switch>
                 <Route exact path="/">
                   <HomeView />
+                </Route>
+                <Route exact path="/bookings">
+                  <BookingsView user={this.state.user} />
                 </Route>
                 <Route exact path="/calendar">
                   <CalendarView user={this.state.user} />

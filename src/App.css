@@ -62,3 +62,9 @@
 #login .login-form-button {
   width: 100%;
 }
+
+.displayQRCode svg {
+  display: block; /* svg is "inline" by default */
+  height: auto; /* reset height */
+  width: 100%;
+}

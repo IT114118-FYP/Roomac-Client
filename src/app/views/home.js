@@ -44,6 +44,29 @@ class HomeView extends Component {
       )
     }
 
+    const getCard = (category) => {
+      if (category.image_url) {
+        let image_url = category.image_url
+        if (category.image_url.includes('https://res.cloudinary.com/')) {
+          image_url = category.image_url.replace('/upload/', '/upload/ar_1.5,c_crop/')
+        } else {
+          image_url = category.image_url
+        }
+
+        return (
+          <Card hoverable cover={<img alt={category.title_en} src={image_url} />}>
+            <Meta title={getTranslatedString(category, 'title')} description="" />
+          </Card>
+        )
+      } 
+
+      return (
+        <Card hoverable>
+          <Meta title={getTranslatedString(category, 'title')} description="" />
+        </Card>
+      )
+    }
+
     return (
       <>
         <h1>{this.props.t('home')}</h1>
@@ -54,16 +77,14 @@ class HomeView extends Component {
             sm: 2,
             md: 3,
             lg: 3,
-            xl: 6,
+            xl: 3,
             xxl: 3,
           }}
           dataSource={this.state.categories}
           renderItem={category => (
             <List.Item>
               <Link to={'/categories/' + category.id}>
-                <Card hoverable cover={<img alt={category.title_en} src={category.image_url?.replace('/upload/', '/upload/ar_1.5,c_crop/')} />}>
-                  <Meta title={getTranslatedString(category, 'title')} description="" />
-                </Card>
+                {getCard(category)}
               </Link>
             </List.Item>
           )}
