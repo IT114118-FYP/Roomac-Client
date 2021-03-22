@@ -153,7 +153,7 @@ class BookingsView extends Component {
                 renderAs="svg" 
                 value={this.state.code} 
                 imageSettings={{
-                  src: 'http://localhost:3000/roomac.png',
+                  src: '/roomac.png',
                   height: 12,
                   width: 12
                 }}
