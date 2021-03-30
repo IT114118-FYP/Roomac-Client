@@ -41,6 +41,11 @@ const resources = {
       "qrcode": "QR Code",
       "displayqrcode": "Display QR Code",
       "refresh": "Refresh",
+      "delete": "Delete",
+      "bookingDelete": "Delete Booking",
+      "bookingDeleteMessage": "Are you sure that you want to delete this booking?",
+      "edit": "Edit",
+      "manage": "Manage",
     }
   },
   hk: {
@@ -81,6 +86,11 @@ const resources = {
       "qrcode": "二維碼",
       "displayqrcode": "顯示二維碼",
       "refresh": "刷新",
+      "delete": "刪除",
+      "bookingDelete": "刪除預訂",
+      "bookingDeleteMessage": "您確定要刪除此預訂嗎？",
+      "edit": "編輯",
+      "manage": "管理",
     }
   },
   cn: {
@@ -121,6 +131,11 @@ const resources = {
       "qrcode": "二维码",
       "displayqrcode": "展示二维码",
       "refresh": "刷新",
+      "delete": "删除",
+      "bookingDelete": "删除预订",
+      "bookingDeleteMessage": "您确定要删除此预订吗？",
+      "edit": "编辑",
+      "manage": "管理",
     }
   },
 };

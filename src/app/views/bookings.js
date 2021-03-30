@@ -8,6 +8,8 @@ import QRCode from 'qrcode.react';
 
 import { getTranslatedString } from '../i18n/func';
 
+import BookingStepsView from './createBooking'; // <- ./editBooking
+
 class BookingsView extends Component {
   _isMounted = false;
 
@@ -17,14 +19,26 @@ class BookingsView extends Component {
       loading: true,
       bookings: [],
       modalVisible: false,
+      modal2Visible: false,
       code: null,
       codeLoading: false,
+      modal2confirmLoading: false,
+      selectedDelete: null,
+      selectedEdit: null,
     };
   }
 
   componentDidMount() {
     this._isMounted = true;
 
+    this.loadBookings();
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
+  loadBookings() {
     axiosInstance
       .get('/api/users/me/bookings')
       .then((bookings) => {
@@ -36,10 +50,6 @@ class BookingsView extends Component {
         }
       })
       .catch((e) => console.log(e));
-  }
-
-  componentWillUnmount() {
-    this._isMounted = false;
   }
 
   fetchCheckInQRCode(resourceId) {
@@ -59,11 +69,36 @@ class BookingsView extends Component {
       .catch((e) => console.log(e));
   }
 
+  displayDeleteConfirmModel(resourceId) {
+    if (this._isMounted) this.setState({
+      selectedDelete: resourceId,
+      modal2Visible: true,
+    });
+  }
+
+  deleteBooking() {
+    if (this._isMounted) this.setState({
+      modal2confirmLoading: true,
+    });
+
+    axiosInstance
+      .delete(`/api/resourcebookings/${this.state.selectedDelete}`)
+      .then((response) => {
+        if (this._isMounted) this.setState({
+          modal2confirmLoading: false,
+          modal2Visible: false,
+        });
+        this.loadBookings();
+      })
+      .catch((e) => console.log(e));
+  }
+
   cancelModal() {
     if (this._isMounted) {
       this.setState({
         code: null,
         modalVisible: false,
+        modal2Visible: false,
       })
     }
   }
@@ -98,12 +133,27 @@ class BookingsView extends Component {
       },
       {
         title: this.props.t('qrcode'),
-        dataIndex: 'resource_id',
-        key: 'resource_id',
-        render: (resource_id) => (
+        dataIndex: 'id',
+        key: 'id',
+        render: (id) => (
           <Space size="middle">
-            <Button type="primary" onClick={() => this.fetchCheckInQRCode(resource_id)} loading={this.state.codeLoading}>
+            <Button type="primary" onClick={() => this.fetchCheckInQRCode(id)} loading={this.state.codeLoading}>
               {this.props.t('displayqrcode')}
+            </Button>
+          </Space>
+        ),
+      },
+      {
+        title: this.props.t('manage'),
+        dataIndex: 'id',
+        key: 'id',
+        render: (id) => (
+          <Space size="middle">
+            <Button type="default" onClick={() => { if (this._isMounted) this.setState({ selectedEdit: id }) }}>
+              {this.props.t('edit')}
+            </Button>
+            <Button type="danger" onClick={() => this.displayDeleteConfirmModel(id)}>
+              {this.props.t('delete')}
             </Button>
           </Space>
         ),
@@ -132,6 +182,12 @@ class BookingsView extends Component {
       return bookings
     }
 
+    if (this.state.selectedEdit) {
+      return (
+        <BookingStepsView  /> // TODO: Fix edit booking
+      )
+    }
+
     return (
       <>
         <h1>{this.props.t('myBookings')} {!this.state.loading && <>({this.state.bookings.length} {this.props.t('results')})</>}</h1>
@@ -139,28 +195,37 @@ class BookingsView extends Component {
           <Table columns={columns} dataSource={parseBookings()} />
         </Spin>
 
-        {this.state.code && (
-          <Modal
-              title={this.props.t('qrcode')}
-              centered
-              visible={this.state.modalVisible}
-              footer={null}
-              onCancel={() => this.cancelModal()}
-            >
+        <Modal
+            title={this.props.t('qrcode')}
+            centered
+            visible={this.state.modalVisible}
+            footer={null}
+            onCancel={() => this.cancelModal()}
+          >
 
-            <div className="displayQRCode">
-              <QRCode 
-                renderAs="svg" 
-                value={this.state.code} 
-                imageSettings={{
-                  src: '/roomac.png',
-                  height: 12,
-                  width: 12
-                }}
-              />
-            </div>
-          </Modal>
-        )}
+          <div className="displayQRCode">
+            <QRCode 
+              renderAs="svg" 
+              value={this.state.code} 
+              imageSettings={{
+                src: '/roomac.png',
+                height: 12,
+                width: 12
+              }}
+            />
+          </div>
+        </Modal>
+
+        <Modal
+            title={this.props.t('bookingDelete')}
+            centered
+            visible={this.state.modal2Visible}
+            onCancel={() => this.cancelModal()}
+            confirmLoading={this.state.modal2confirmLoading}
+            onOk={() => this.deleteBooking()}
+          >
+          {this.props.t('bookingDeleteMessage')}
+        </Modal>
       </>
     );
   }

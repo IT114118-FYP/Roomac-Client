@@ -323,7 +323,7 @@ class CreateBookingView extends Component {
                 title={this.props.t('bookingSuccess')}
                 subTitle={<>{getItemTitle(this.props.resource)} <br /> {this.props.t('bookingReference')}: {this.state.bookingReference}</>}
                 extra={[
-                  <Button type="primary" key="console"><Link to="/calendar">{(this.props.t('myCalendar'))}</Link></Button>,
+                  <Button type="primary" key="console"><Link to="/bookings">{(this.props.t('myBookings'))}</Link></Button>,
                   <Button key="returnTo" onClick={this.props.unsetResource}>{this.props.t('returnTo')} {getTranslatedString(this.props.category, 'title')}</Button>,
                 ]}
               />
