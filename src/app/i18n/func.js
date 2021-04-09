@@ -10,10 +10,14 @@ const getTranslatedString = (obj, string) => {
   return translated && translated.length > 0 ? translated : obj[string + '_en'];
 }
 
+const getCurrentLanguage = () => {
+  return i18n.language;
+}
+
 let languageOptions = [];
 for (let key in languages) {
     languageOptions.push(<Option key={key} value={key}>{languages[key]}</Option>);
 }
 
-export { languages, languageOptions, getTranslatedString };
+export { languages, languageOptions, getTranslatedString, getCurrentLanguage };
   
