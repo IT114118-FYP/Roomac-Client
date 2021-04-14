@@ -5,6 +5,7 @@ import { React, Component } from "react";
 import { axiosInstance } from './app/api/axiosInstance';
 import { BrowserRouter as Router, Redirect, Switch, Route } from "react-router-dom";
 import { Row, Col, Spin } from 'antd';
+import KommunicateChat from './chat';
 
 import AuthView from './app/views/auth';
 import DefaultView from './app/views/default';
@@ -107,6 +108,7 @@ class App extends Component {
             </DefaultView>
           </Route>
         </Switch>
+        <KommunicateChat />
       </Router>
     )
   };
