@@ -46,6 +46,10 @@ const resources = {
       "bookingDeleteMessage": "Are you sure that you want to delete this booking?",
       "edit": "Edit",
       "manage": "Manage",
+      "loginFailed": "Login Failed",
+      "loginFailedMessage": "Your login details were incorrect. Please try again.",
+      "accountBanned": "Account Banned",
+      "accountBannedMessage": "Your account is banned until ",
     }
   },
   hk: {
@@ -91,6 +95,10 @@ const resources = {
       "bookingDeleteMessage": "您確定要刪除此預訂嗎？",
       "edit": "編輯",
       "manage": "管理",
+      "loginFailed": "登錄失敗",
+      "loginFailedMessage": "您的登錄資料不正確。請再試一次。",
+      "accountBanned": "帳戶被禁止",
+      "accountBannedMessage": "您的帳戶被禁止使用，直到",
     }
   },
   cn: {
@@ -136,6 +144,10 @@ const resources = {
       "bookingDeleteMessage": "您确定要删除此预订吗？",
       "edit": "编辑",
       "manage": "管理",
+      "loginFailed": "登录失败",
+      "loginFailedMessage": "您的登录资料不正确。请再试一次。",
+      "accountBanned": "帐户被禁止",
+      "accountBannedMessage": "您的帐户被禁止使用，直到",
     }
   },
 };

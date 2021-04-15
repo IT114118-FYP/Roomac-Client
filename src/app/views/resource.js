@@ -72,6 +72,7 @@ class ResourceView extends Component {
         }
       }.bind(this));*/
     
+    /*
     if (localStorage.getItem('geo') === null
     || localStorage.getItem('geo').split(';').length !== 3
     || localStorage.getItem('geo').split(';')[2] + 3600 < Date.now()) {
@@ -85,6 +86,7 @@ class ResourceView extends Component {
       let geo = localStorage.getItem('geo').split(';');
       this.setState({ lat: geo[0], lng: geo[1] });
     }
+    */
     
     // Load resources
     /*axiosInstance

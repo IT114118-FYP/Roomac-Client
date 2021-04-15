@@ -5,10 +5,10 @@ import { MailOutlined, LockOutlined, LoginOutlined } from '@ant-design/icons';
 import { axiosInstance } from '../api/axiosInstance';
 import { languages, languageOptions } from '../i18n/func';
 
-const openNotificationWithIcon = () => {
-  notification['error']({
-    message: 'Login Failed',
-    description: 'Your login details were incorrect. Please try again.',
+const openNotificationWithIcon = (type, message, description) => {
+  notification[type]({
+    message: message,
+    description: description,
     duration: 0,
     placement: 'topLeft',
   });
@@ -75,7 +75,11 @@ class AuthView extends Component {
         this.setState({ loading: false });
 
         // Open fail to login notification
-        openNotificationWithIcon();       
+        if (error.response.status === 402) {
+          openNotificationWithIcon('warning', this.props.t('accountBanned'), this.props.t('accountBannedMessage') + error.response.data);
+        } else {
+          openNotificationWithIcon('error', this.props.t('loginFailed'), this.props.t('loginFailedMessage'));
+        }
       });
   }
 
