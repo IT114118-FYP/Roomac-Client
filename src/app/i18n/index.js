@@ -50,6 +50,8 @@ const resources = {
       "loginFailedMessage": "Your login details were incorrect. Please try again.",
       "accountBanned": "Account Banned",
       "accountBannedMessage": "Your account is banned until ",
+      "account": "Account",
+      "settings": "Settings",
     }
   },
   hk: {
@@ -99,6 +101,8 @@ const resources = {
       "loginFailedMessage": "您的登錄資料不正確。請再試一次。",
       "accountBanned": "帳戶被禁止",
       "accountBannedMessage": "您的帳戶被禁止使用，直到",
+      "account": "帳戶",
+      "settings": "設定",
     }
   },
   cn: {
@@ -148,6 +152,8 @@ const resources = {
       "loginFailedMessage": "您的登录资料不正确。请再试一次。",
       "accountBanned": "帐户被禁止",
       "accountBannedMessage": "您的帐户被禁止使用，直到",
+      "account": "帐户",
+      "settings": "设定",
     }
   },
 };
