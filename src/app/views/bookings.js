@@ -8,7 +8,7 @@ import QRCode from 'qrcode.react';
 
 import { getTranslatedString } from '../i18n/func';
 
-import BookingStepsView from './createBooking'; // <- ./editBooking
+import BookingStepsView from './editBooking';
 
 class BookingsView extends Component {
   _isMounted = false;
@@ -103,6 +103,12 @@ class BookingsView extends Component {
     }
   }
 
+  unsetSelectedEdit() {
+    this.setState({ selectedEdit: null, loading: true })
+
+    this.loadBookings()
+  }
+
   render() {
     const columns = [
       {
@@ -183,8 +189,17 @@ class BookingsView extends Component {
     }
 
     if (this.state.selectedEdit) {
+      var booking;
+
+      for (const i in this.state.bookings) {
+        booking = this.state.bookings[i];
+        if (booking.id === this.state.selectedEdit) {
+          break;
+        }
+      }
+
       return (
-        <BookingStepsView  /> // TODO: Fix edit booking
+        <BookingStepsView booking={booking} unsetSelectedEdit={this.unsetSelectedEdit.bind(this)} />
       )
     }
 

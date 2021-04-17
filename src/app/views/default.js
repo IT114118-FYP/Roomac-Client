@@ -1,9 +1,9 @@
 import { React } from "react";
 import { Component } from "react";
 import { withTranslation } from 'react-i18next';
-import { Layout, Menu, Modal, Select, Avatar, Dropdown } from 'antd';
+import { Layout, Menu, Modal, Select, Avatar } from 'antd';
 
-import { HomeOutlined, CaretRightOutlined, LogoutOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { HomeOutlined, CaretRightOutlined, LogoutOutlined, SettingOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { Link, withRouter } from "react-router-dom";
 import { axiosInstance } from '../api/axiosInstance';
 import { languages, languageOptions } from '../i18n/func';
@@ -69,14 +69,6 @@ class DefaultView extends Component {
       )
     });
 
-    const menu = (
-      <Menu style={{width: 100}}>
-        <Menu.Item icon={<LogoutOutlined />} onClick={this.showPromiseConfirm} danger>
-          {(this.props.t('logout'))}
-        </Menu.Item>
-      </Menu>
-    );
-
     return (
       <Layout style={{ minHeight:"100vh" }}>
         <Sider
@@ -105,6 +97,14 @@ class DefaultView extends Component {
             <Menu.ItemGroup key="g1" title={(this.props.t('categories'))}>
               {categories}
             </Menu.ItemGroup>
+            <Menu.ItemGroup key="g2" title={(this.props.t('account'))}>
+              <Menu.Item key="/settings" icon={<SettingOutlined />}>
+                <Link to="/settings">{(this.props.t('settings'))}</Link>
+              </Menu.Item>
+              <Menu.Item icon={<LogoutOutlined />} onClick={this.showPromiseConfirm} danger>
+                {(this.props.t('logout'))}
+              </Menu.Item>
+            </Menu.ItemGroup>
           </Menu>
         </Sider>
         <Layout>
@@ -113,9 +113,7 @@ class DefaultView extends Component {
               {(this.props.t('welcome'))} {this.props.user.first_name} {this.props.user.last_name} 
             </div>
 
-            <Dropdown overlay={menu} placement="bottomRight">
-              <Avatar src={this.props.user.image_url} style={{marginLeft: 15, cursor:'pointer'}}/>
-            </Dropdown>
+            <Avatar src={this.props.user.image_url} style={{marginLeft: 15}} />
 
             <Select defaultValue={languages[this.props.i18n.language]} style={{marginLeft: 15, width: 100}} onChange={this.handleLanguageChange.bind(this)}>
               {languageOptions}
