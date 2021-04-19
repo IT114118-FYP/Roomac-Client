@@ -50,7 +50,10 @@ class BookingsView extends Component {
           })
         }
       })
-      .catch((e) => console.log(e));
+      .catch((e) => {
+        console.log(e)
+        openNotification('error', this.props.t('defaultError'), this.props.t('defaultErrorMessage'), 15, 'topRight');
+      });
   }
 
   fetchCheckInQRCode(resourceId) {
@@ -99,7 +102,15 @@ class BookingsView extends Component {
         });
         this.loadBookings();
       })
-      .catch((e) => console.log(e));
+      .catch((e) => {
+        if (this._isMounted) this.setState({
+          modal2confirmLoading: false,
+          modal2Visible: false,
+        });
+        
+        console.log(e)
+        openNotification('error', this.props.t('defaultError'), this.props.t('defaultErrorMessage'), 15, 'topRight');
+      });
   }
 
   cancelModal() {

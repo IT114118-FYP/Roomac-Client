@@ -223,7 +223,7 @@ class CreateBookingView extends Component {
   }
 
   isSelectValid = (events, startTime, endTime) => {
-    if ((startTime.getTime() + this.state.bookings.interval * 100000) <= new Date().getTime()) {
+    if ((startTime.getTime() + this.state.bookings.interval * 60000) < new Date().getTime()) {
       return false;
     }
   

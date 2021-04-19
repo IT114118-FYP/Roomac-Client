@@ -4,6 +4,7 @@ import { withTranslation } from 'react-i18next';
 import { axiosInstance } from '../api/axiosInstance';
 import { Spin } from 'antd';
 import { getTranslatedString } from '../i18n/func';
+import { openNotification } from '../components/notification';
 import moment from 'moment';
 
 import FullCalendar from '@fullcalendar/react';
@@ -61,7 +62,10 @@ class CalendarView extends Component {
           })
         }
       })
-      .catch((e) => console.log(e));
+      .catch((e) => {
+        console.log(e)
+        openNotification('error', this.props.t('defaultError'), this.props.t('defaultErrorMessage'), 15, 'topRight');
+      });
   }
 
   render() {

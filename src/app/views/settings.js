@@ -105,7 +105,7 @@ class SettingsView extends Component {
 
         <Descriptions title={this.props.t('avatar')}>
           <Descriptions.Item>
-            <AntAvatar shape="square" src={this.props.user.image_url} size={128} />
+            <AntAvatar shape="circle" src={this.props.user.image_url} size={128} />
           </Descriptions.Item>
         </Descriptions>
         <Button type="primary" size={50} onClick={() => this.setChangeAvatarModalVisible(true)}>
@@ -127,6 +127,7 @@ class SettingsView extends Component {
             onCrop={this.onCrop.bind(this)}
             onClose={this.onClose.bind(this)}
             label={this.props.t('chooseImage')}
+            exportAsSquare={true}
           />
         </Modal>
 
