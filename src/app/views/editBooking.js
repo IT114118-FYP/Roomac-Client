@@ -51,16 +51,6 @@ const getLocalISOString = (time) => {
   return (new Date(time - tzoffset)).toISOString().slice(0, -8).replace('T', ' ');
 }
 
-const isSelectValid = (events, startTime, endTime) => {
-  for (let i in events) {
-    if ((new Date(events[i].start).getTime() >= startTime.getTime() && new Date(events[i].end).getTime() <= endTime.getTime())
-    || (new Date(events[i].start).getTime() <= startTime.getTime() && new Date(events[i].end).getTime() >= endTime.getTime())) {
-      return false;
-    }
-  }
-  return true;
-}
-
 class EditBookingView extends Component {
     _isMounted = false;
   
@@ -242,7 +232,21 @@ class EditBookingView extends Component {
   
     selectAllow(selectInfo) {
       if (selectInfo.start.getDate() !== selectInfo.end.getDate()) { return false }
-      return isSelectValid(getEvents(this.state.bookings.allow_times), selectInfo.start, selectInfo.end)
+      return this.isSelectValid(getEvents(this.state.bookings.allow_times), selectInfo.start, selectInfo.end)
+    }
+
+    isSelectValid = (events, startTime, endTime) => {
+      if ((startTime.getTime() + this.state.bookings.interval * 100000) <= new Date().getTime()) {
+        return false;
+      }
+    
+      for (let i in events) {
+        if ((new Date(events[i].start).getTime() >= startTime.getTime() && new Date(events[i].end).getTime() <= endTime.getTime())
+         || (new Date(events[i].start).getTime() <= startTime.getTime() && new Date(events[i].end).getTime() >= endTime.getTime())) {
+          return false;
+        }
+      }
+      return true;
     }
   
     render() {

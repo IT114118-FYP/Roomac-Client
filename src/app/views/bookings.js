@@ -3,6 +3,7 @@ import { Component } from "react";
 import { withTranslation } from 'react-i18next';
 import { axiosInstance } from '../api/axiosInstance';
 import { Spin, Table, Space, Modal, Button } from 'antd';
+import { openNotification } from '../components/notification';
 import moment from 'moment';
 import QRCode from 'qrcode.react';
 
@@ -66,7 +67,15 @@ class BookingsView extends Component {
           })
         }
       })
-      .catch((e) => console.log(e));
+      .catch((e) => {
+        if (this._isMounted) {
+          this.setState({
+            codeLoading: false,
+          })
+        }
+        console.log(e)
+        openNotification('error', this.props.t('defaultError'), this.props.t('defaultErrorMessage'), 15, 'topRight');
+      });
   }
 
   displayDeleteConfirmModel(resourceId) {
@@ -110,6 +119,20 @@ class BookingsView extends Component {
   }
 
   render() {
+    let editAndDeletableIds = []
+    for (let i in this.state.bookings) {
+      if (new Date(this.state.bookings[i].start_time).getTime() > new Date()) {
+        editAndDeletableIds.push(this.state.bookings[i].id);
+      }
+    }
+
+    let displayableIds = []
+    for (let i in this.state.bookings) {
+      if (new Date(this.state.bookings[i].end_time).getTime() >= new Date()) {
+        displayableIds.push(this.state.bookings[i].id);
+      }
+    }
+
     const columns = [
       {
         title: this.props.t('referenceNumber'),
@@ -143,7 +166,7 @@ class BookingsView extends Component {
         key: 'id',
         render: (id) => (
           <Space size="middle">
-            <Button type="primary" onClick={() => this.fetchCheckInQRCode(id)} loading={this.state.codeLoading}>
+            <Button type="primary" onClick={() => this.fetchCheckInQRCode(id)} loading={this.state.codeLoading} disabled={!displayableIds.includes(id)}>
               {this.props.t('displayqrcode')}
             </Button>
           </Space>
@@ -155,10 +178,10 @@ class BookingsView extends Component {
         key: 'id',
         render: (id) => (
           <Space size="middle">
-            <Button type="default" onClick={() => { if (this._isMounted) this.setState({ selectedEdit: id }) }}>
+            <Button type="default" onClick={() => { if (this._isMounted) this.setState({ selectedEdit: id }) }} disabled={!editAndDeletableIds.includes(id)}>
               {this.props.t('edit')}
             </Button>
-            <Button type="danger" onClick={() => this.displayDeleteConfirmModel(id)}>
+            <Button type="danger" onClick={() => this.displayDeleteConfirmModel(id)} disabled={!editAndDeletableIds.includes(id)}>
               {this.props.t('delete')}
             </Button>
           </Space>

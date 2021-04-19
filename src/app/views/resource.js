@@ -24,9 +24,9 @@ const getDistanceString = (start, end) => {
     return ' - ';
   }
 
-  return ' - ';
+  let temp = true;
+  if (temp) return ' - ';
 
-  // 
   return (getDistance(
     { latitude: start.lat, longitude: start.lng },
     { latitude: end.lat, longitude: end.lng }) / 1000).toPrecision(3);

@@ -5,6 +5,7 @@ import { axiosInstance } from '../api/axiosInstance';
 import { List, Skeleton, Card } from 'antd';
 import { getTranslatedString } from '../i18n/func';
 import { Link } from 'react-router-dom';
+import * as axios from "axios";
 
 const { Meta } = Card;
 
@@ -16,17 +17,25 @@ class HomeView extends Component {
     this.state = {
       loading: true,
       categories: [],
+      bookings: [],
     };
   }
 
   componentDidMount() {
     this._isMounted = true;
     // Load resources
-    axiosInstance
-      .get('api/categories')
-      .then((categories) => {
-        if (this._isMounted) this.setState({ loading: false, categories: categories.data })
-      })
+    axios
+      .all([
+        axiosInstance.get('api/categories'),
+        axiosInstance.get('api/users/me/bookings'),
+      ])
+      .then(axios.spread((categories, bookings) => {
+        if (this._isMounted) this.setState({
+          loading: false,
+          categories: categories.data,
+          bookings: bookings.data,
+        })
+      }))
       .catch(() => { if (this._isMounted) this.setState({ loading: false }) });
   }
 
