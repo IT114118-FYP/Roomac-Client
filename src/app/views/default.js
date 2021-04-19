@@ -1,12 +1,11 @@
 import { React } from "react";
 import { Component } from "react";
 import { withTranslation } from 'react-i18next';
-import { Layout, Menu, Modal, Select, Avatar } from 'antd';
+import { Layout, Menu, Modal, Avatar } from 'antd';
 
 import { HomeOutlined, CaretRightOutlined, LogoutOutlined, SettingOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { Link, withRouter } from "react-router-dom";
 import { axiosInstance } from '../api/axiosInstance';
-import { languages, languageOptions } from '../i18n/func';
 import { AiOutlineCalendar } from 'react-icons/ai';
 import { RiFileListLine } from 'react-icons/ri';
 
@@ -45,12 +44,10 @@ class DefaultView extends Component {
     });
   }
 
-  handleLanguageChange(value) {
-    this.props.i18n.changeLanguage(value);
-  }
-
   onSelect({ item, key, keyPath, selectedKeys, domEvent }) {
-    this.setState({ selectedKeys: selectedKeys })
+    if (selectedKeys[0] !== "/logout") {
+      this.setState({ selectedKeys: selectedKeys })
+    }
   }
 
   setSelectedKeys(selectedKeys) {
@@ -101,7 +98,7 @@ class DefaultView extends Component {
               <Menu.Item key="/settings" icon={<SettingOutlined />}>
                 <Link to="/settings">{(this.props.t('settings'))}</Link>
               </Menu.Item>
-              <Menu.Item icon={<LogoutOutlined />} onClick={this.showPromiseConfirm} danger>
+              <Menu.Item key="/logout" icon={<LogoutOutlined />} onClick={this.showPromiseConfirm} danger>
                 {(this.props.t('logout'))}
               </Menu.Item>
             </Menu.ItemGroup>
@@ -114,10 +111,6 @@ class DefaultView extends Component {
             </div>
 
             <Avatar src={this.props.user.image_url} style={{marginLeft: 15}} />
-
-            <Select defaultValue={languages[this.props.i18n.language]} style={{marginLeft: 15, width: 100}} onChange={this.handleLanguageChange.bind(this)}>
-              {languageOptions}
-            </Select>
           </Header>
           <Content style={{margin: '24px 16px 0'}}>
             <div className="site-layout-background" style={{padding: 24, minHeight: 360}}>

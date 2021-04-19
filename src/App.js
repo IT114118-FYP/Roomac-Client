@@ -13,6 +13,7 @@ import ResourceView from './app/views/resource';
 import HomeView from './app/views/home';
 import CalendarView from './app/views/calendar';
 import BookingsView from './app/views/bookings';
+import SettingsView from './app/views/settings';
 
 class App extends Component {
   constructor(props) {
@@ -44,6 +45,15 @@ class App extends Component {
         })
         .catch(() => this.setState({ loading: false }));
     }
+  }
+
+  updateUser() {
+    axiosInstance
+      .get('/api/users/me')
+      .then((user) => this.setState({user: user.data}))
+      .catch((error) => {
+        console.log(error.response);
+      });
   }
 
   handleLogin(user) {
@@ -102,6 +112,9 @@ class App extends Component {
                 </Route>
                 <Route exact path="/calendar">
                   <CalendarView user={this.state.user} />
+                </Route>
+                <Route exact path="/settings">
+                  <SettingsView user={this.state.user} updateUser={this.updateUser.bind(this)}/>
                 </Route>
                 {categoryRoutes}
               </Switch>

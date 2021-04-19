@@ -4,15 +4,7 @@ import { Form, Input, Button, Row, Col, Card, Spin, notification, Select } from 
 import { MailOutlined, LockOutlined, LoginOutlined } from '@ant-design/icons';
 import { axiosInstance } from '../api/axiosInstance';
 import { languages, languageOptions } from '../i18n/func';
-
-const openNotificationWithIcon = (type, message, description) => {
-  notification[type]({
-    message: message,
-    description: description,
-    duration: 0,
-    placement: 'topLeft',
-  });
-};
+import { openNotification } from '../components/notification';
 
 class AuthView extends Component {
   _isMounted = false;
@@ -76,9 +68,9 @@ class AuthView extends Component {
 
         // Open fail to login notification
         if (error.response.status === 402) {
-          openNotificationWithIcon('warning', this.props.t('accountBanned'), this.props.t('accountBannedMessage') + error.response.data);
+          openNotification('warning', this.props.t('accountBanned'), this.props.t('accountBannedMessage') + error.response.data);
         } else {
-          openNotificationWithIcon('error', this.props.t('loginFailed'), this.props.t('loginFailedMessage'));
+          openNotification('error', this.props.t('loginFailed'), this.props.t('loginFailedMessage'));
         }
       });
   }
