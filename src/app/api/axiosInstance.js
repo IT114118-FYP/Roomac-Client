@@ -3,10 +3,10 @@ import * as axios from "axios";
 const baseURLs = ["https://roomac.tatlead.com", "https://it114118-fyp.herokuapp.com"];
 
 const getBaseURL = () => {
-	if (localStorage.getItem("baseURL") === baseURLs[0]) {
-		return baseURLs[0];
-	} else if (localStorage.getItem("baseURL") === baseURLs[1]) {
-		return baseURLs[1];
+	for (let i in baseURLs) {
+		if (localStorage.getItem("baseURL") === baseURLs[i]) {
+			return baseURLs[i];
+		}
 	}
 
 	localStorage.setItem("baseURL", baseURLs[0]);
