@@ -2,10 +2,12 @@ import { Component } from "react";
 import { withTranslation } from 'react-i18next';
 import { Form, Input, Button, Row, Col, Card, Spin, notification, Select } from 'antd';
 import { MailOutlined, LockOutlined, LoginOutlined } from '@ant-design/icons';
-import { axiosInstance } from '../api/axiosInstance';
+import { axiosInstance, baseURLs, getBaseURL, setBaseURL } from '../api/axiosInstance';
 import { languages, languageOptions } from '../i18n/func';
 import { openNotification } from '../components/notification';
 import RoomacIcon from "../assets/roomac.png";
+
+const { Option } = Select;
 
 class AuthView extends Component {
   _isMounted = false;
@@ -14,12 +16,22 @@ class AuthView extends Component {
     super(props);
     this.state = {
       loading: true,
+      latency: {},
     };
   }
   
   // If user is already logged in already but still on '/login'
   componentDidMount() {
     this._isMounted = true;
+
+    var startTime = new Date();
+
+    for (let i in baseURLs) {
+      var img = new Image()
+      img.onload = this.setLatency(i, startTime)
+      img.src = baseURLs[i] + '/favicon.ico?ping=' + (Math.random() * 10);
+    }
+
     if (localStorage.getItem("authToken") == null) {
 			this.setState({ loading: false });
     } else {
@@ -32,6 +44,16 @@ class AuthView extends Component {
 
   componentWillUnmount() {
     this._isMounted = false;
+  }
+
+  setLatency(i, startTime) {
+    var ping = (new Date()).getTime() - startTime.getTime()
+    console.log(baseURLs[i], 'Latency:', ping)
+
+    let latency = this.state.latency
+    latency[i] = ping
+
+    this.setState({ latency: latency })
   }
 
   handleLanguageChange(value) {
@@ -77,11 +99,21 @@ class AuthView extends Component {
   }
 
   render() {
+    let baseURLOptions = [];
+    for (let key in baseURLs) {
+        baseURLOptions.push(<Option key={key} value={key}>{baseURLs[key]}</Option>);
+    }
+
     return (
       <div style={{minHeight: '100vh', backgroundColor: '#001529'}}>
-        <Select defaultValue={languages[this.props.i18n.language]} style={{position: "fixed", top: 15, right: 15, width: 100}} onChange={this.handleLanguageChange.bind(this)}>
+        <Select defaultValue={languages[this.props.i18n.language]} style={{position: "fixed", top: 15, right: 15, width: 100}} onChange={this.handleLanguageChange.bind(this)} disabled={this.state.loading}>
           {languageOptions}
         </Select>
+
+        <Select defaultValue={getBaseURL()} style={{position: "fixed", left: 15, bottom: 15, width: 300}} onChange={(value) => setBaseURL(value)} disabled={this.state.loading}>
+          {baseURLOptions}
+        </Select>
+
         <Row type="flex" justify="center" align="middle" style={{minHeight: '100vh'}}>
           <Col>   
             <div className="logo" style={{display: 'flex', justifyContent: 'center', marginBottom: 15}}>
