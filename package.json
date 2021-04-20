@@ -3,7 +3,7 @@
   "description": "roomac-client",
   "author": "it114118-fyp",
   "homepage": "./",
-  "main": "./public/electron.js",
+  "main": "./main.js",
   "version": "0.0.1",
   "private": true,
   "devDependencies": {
@@ -47,7 +47,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "edev": "concurrently \"npm start\" \"wait-on http://localhost:3000 && electron .\"",
-    "ebuild": "./node_modules/.bin/electron-builder -c.extraMetadata.main=build/electron.js"
+    "ebuild": "./node_modules/.bin/electron-builder"
   },
   "build": {
     "productName": "Roomac",

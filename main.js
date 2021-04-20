@@ -9,11 +9,11 @@ function createWindow() {
         width: 1200,
         height: 800,
         show: false,
-        icon: path.join(__dirname, '../public/roomac.ico'),
+        icon: path.join(__dirname, './public/roomac.ico'),
     });
     mainWindow.setMenuBarVisibility(false);
 
-    const startURL = isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../build/index.html')}`;
+    const startURL = isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, './build/index.html')}`;
  
     mainWindow.loadURL(startURL);
  
