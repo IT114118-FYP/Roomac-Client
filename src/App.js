@@ -3,9 +3,11 @@ import './App.css';
 
 import { React, Component } from "react";
 import { axiosInstance } from './app/api/axiosInstance';
-import { BrowserRouter as Router, Redirect, Switch, Route } from "react-router-dom";
+import { BrowserRouter, HashRouter, Redirect, Switch, Route } from "react-router-dom";
 import { Row, Col, Spin } from 'antd';
 import KommunicateChat from './chat';
+import RoomacIcon from "./app/assets/roomac.png";
+import isElectron from 'is-electron';
 
 import AuthView from './app/views/auth';
 import DefaultView from './app/views/default';
@@ -14,6 +16,8 @@ import HomeView from './app/views/home';
 import CalendarView from './app/views/calendar';
 import BookingsView from './app/views/bookings';
 import SettingsView from './app/views/settings';
+
+const Router = isElectron() ? HashRouter : BrowserRouter;
 
 class App extends Component {
   constructor(props) {
@@ -78,7 +82,7 @@ class App extends Component {
           <Col>
             <div className="logo" style={{ display: 'flex', justifyContent: 'center', marginBottom: 15 }}>
               <div>
-                <img src="/favicon.ico" width="40" height="40" style={{ marginRight: 15, marginBottom: 15 }} alt="favicon" />
+                <img src={RoomacIcon} width="40" height="40" style={{ marginRight: 15, marginBottom: 15 }} alt="favicon" />
                 <i style={{ color: 'white', fontSize: 36 }}>roomac</i>
               </div>
             </div>
@@ -104,9 +108,6 @@ class App extends Component {
           <Route path="/">
             <DefaultView user={this.state.user} categories={this.state.categories} onLogout={this.handleLogout.bind(this)}>
               <Switch>
-                <Route exact path="/">
-                  <HomeView />
-                </Route>
                 <Route exact path="/bookings">
                   <BookingsView user={this.state.user} />
                 </Route>
@@ -117,6 +118,9 @@ class App extends Component {
                   <SettingsView user={this.state.user} updateUser={this.updateUser.bind(this)}/>
                 </Route>
                 {categoryRoutes}
+                <Route exact path="/">
+                  <HomeView />
+                </Route>
               </Switch>
             </DefaultView>
           </Route>

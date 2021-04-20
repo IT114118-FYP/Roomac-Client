@@ -5,6 +5,7 @@ import { MailOutlined, LockOutlined, LoginOutlined } from '@ant-design/icons';
 import { axiosInstance } from '../api/axiosInstance';
 import { languages, languageOptions } from '../i18n/func';
 import { openNotification } from '../components/notification';
+import RoomacIcon from "../assets/roomac.png";
 
 class AuthView extends Component {
   _isMounted = false;
@@ -85,7 +86,7 @@ class AuthView extends Component {
           <Col>   
             <div className="logo" style={{display: 'flex', justifyContent: 'center', marginBottom: 15}}>
               <div>
-                <img src="/favicon.ico" width="40" height="40" style={{marginRight: 15, marginBottom: 15}} alt="favicon" />
+                <img src={RoomacIcon} width="40" height="40" style={{marginRight: 15, marginBottom: 15}} alt="favicon" />
                 <i style={{color: 'white', fontSize: 36}}>roomac</i>
               </div>
             </div>
@@ -105,11 +106,11 @@ class AuthView extends Component {
                     rules={[
                       {
                         required: true,
-                        message: 'Please input your email/id',
+                        message: this.props.t('emailOrIdBlank'),
                       },
                     ]}
                   >
-                    <Input prefix={<MailOutlined className="site-form-item-icon" />} placeholder="Email/ID" />
+                    <Input prefix={<MailOutlined className="site-form-item-icon" />} placeholder={this.props.t('emailOrId')} />
                   </Form.Item>
 
                   <Form.Item
@@ -117,14 +118,14 @@ class AuthView extends Component {
                     rules={[
                       {
                         required: true,
-                        message: 'Please input your password',
+                        message: this.props.t('passwordBlank'),
                       },
                     ]}
                   >
                     <Input.Password
                       prefix={<LockOutlined className="site-form-item-icon" />}
                       type="password"
-                      placeholder="Password"
+                      placeholder={this.props.t('password')}
                     />
                   </Form.Item>
 

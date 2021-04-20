@@ -1,7 +1,17 @@
 {
   "name": "roomac-client",
-  "version": "0.1.0",
+  "description": "roomac-client",
+  "author": "it114118-fyp",
+  "homepage": "./",
+  "main": "./public/electron.js",
+  "version": "0.0.1",
   "private": true,
+  "devDependencies": {
+    "concurrently": "^6.0.2",
+    "electron": "^12.0.4",
+    "electron-builder": "^22.10.5",
+    "wait-on": "^5.3.0"
+  },
   "dependencies": {
     "@fullcalendar/daygrid": "^5.5.0",
     "@fullcalendar/interaction": "^5.5.0",
@@ -13,9 +23,11 @@
     "algoliasearch": "^4.8.6",
     "antd": "^4.9.4",
     "axios": "^0.21.0",
+    "electron-is-dev": "^2.0.0",
     "geolib": "^3.3.1",
     "i18next": "^19.8.4",
     "i18next-browser-languagedetector": "^6.0.1",
+    "is-electron": "^2.2.0",
     "moment": "^2.29.1",
     "qrcode.react": "^1.0.1",
     "react": "^17.0.1",
@@ -33,7 +45,30 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "edev": "concurrently \"npm start\" \"wait-on http://localhost:3000 && electron .\"",
+    "ebuild": "./node_modules/.bin/electron-builder -c.extraMetadata.main=build/electron.js"
+  },
+  "build": {
+    "productName": "Roomac",
+    "appId": "com.roomac",
+    "files": [
+      "build/**/*",
+      "node_modules/**/*"
+    ],
+    "directories": {
+      "buildResources": "build"
+    },
+    "win": {
+      "asar": false,
+      "target": "nsis",
+      "icon": "build/roomac.ico"
+    },
+    "nsis": {
+      "installerIcon": "build/roomac.ico",
+      "installerHeaderIcon": "build/roomac.ico",
+      "deleteAppDataOnUninstall": true
+    }
   },
   "eslintConfig": {
     "extends": [

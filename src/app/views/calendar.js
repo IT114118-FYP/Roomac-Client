@@ -47,7 +47,7 @@ class CalendarView extends Component {
         for (let i in bookings.data) {
           let booking = bookings.data[i];
           events.push({
-            title: booking.resource.number + ' • ' + getTranslatedString(booking.resource, 'title'),
+            title: booking.resource.number + (getTranslatedString(booking.resource, 'title') === '' ? '' : ' • ') + getTranslatedString(booking.resource, 'title'),
             start: booking.start_time,
             end: booking.end_time,
             color: 'blue',
@@ -83,7 +83,7 @@ class CalendarView extends Component {
             slotMaxTime={this.state.slotMaxTime}
             nowIndicator={true}
             contentHeight='auto'
-            events={this.state.events}    
+            events={this.state.events}
             datesSet={this.onDatesSetChange.bind(this)}
           />
         </Spin>

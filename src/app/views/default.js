@@ -9,6 +9,9 @@ import { axiosInstance } from '../api/axiosInstance';
 import { AiOutlineCalendar } from 'react-icons/ai';
 import { RiFileListLine } from 'react-icons/ri';
 
+import RoomacIcon from "../assets/roomac.png";
+import isElectron from 'is-electron';
+
 const { Header, Content, Footer, Sider } = Layout;
 const { confirm } = Modal;
 
@@ -16,14 +19,8 @@ class DefaultView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedKeys: [window.location.pathname],
+      selectedKeys: [isElectron() ? window.location.hash.substring(1) : window.location.pathname],
     };
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.location !== prevProps.location && window.location.pathname !== this.state.selectedKeys) {
-      this.setState({ selectedKeys: [window.location.pathname] })
-    }
   }
 
   showPromiseConfirm = () => {
@@ -78,7 +75,7 @@ class DefaultView extends Component {
             //console.log(collapsed, type);
           }}>
           <div className="logo" style={{display: 'flex'}}>
-            <img src="/favicon.ico" width="30" height="30" style={{margin: 15}} alt="favicon" />
+            <img src={RoomacIcon} width="30" height="30" style={{margin: 15}} alt="favicon" />
             <i style={{color: 'white', fontSize: 24, alignSelf: 'center', paddingBottom: 5}}>roomac</i>
           </div>
           <Menu theme="dark" mode="inline" selectedKeys={this.state.selectedKeys} onSelect={this.onSelect.bind(this)}>
