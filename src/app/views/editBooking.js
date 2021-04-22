@@ -231,7 +231,7 @@ class EditBookingView extends Component {
     }
   
     selectAllow(selectInfo) {
-      if (selectInfo.start.getDate() !== selectInfo.end.getDate()) { return false }
+      if (selectInfo.start.getDate() !== selectInfo.end.getDate() && selectInfo.start.getHours() < selectInfo.end.getHours()) { return false }
       return this.isSelectValid(getEvents(this.state.bookings.allow_times), selectInfo.start, selectInfo.end)
     }
 
