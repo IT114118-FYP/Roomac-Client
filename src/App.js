@@ -47,7 +47,7 @@ class App extends Component {
             loading: false,
           });
         })
-        .catch(() => this.setState({ loading: false }));
+        .catch(() => this.setState({ user: [], loading: false }));
     }
   }
 
@@ -57,6 +57,7 @@ class App extends Component {
       .then((user) => this.setState({user: user.data}))
       .catch((error) => {
         console.log(error.response);
+        this.setState({user: []});
       });
   }
 
@@ -71,7 +72,7 @@ class App extends Component {
   }
 
   handleLogout() {
-    this.setState({ isLogin: false });
+    this.setState({ user: [], isLogin: false });
     console.log('-> Logout')
   }
 
@@ -99,34 +100,36 @@ class App extends Component {
     );
 
     return (
-      <Router>
-        { !this.state.isLogin ? <Redirect to="/login" /> : this.state.gotoDefaultView && <Redirect to='/' /> }
-        <Switch>
-          <Route path="/login">
-            <AuthView onLoginSuccess={this.handleLogin.bind(this)}/>
-          </Route>
-          <Route path="/">
-            <DefaultView user={this.state.user} categories={this.state.categories} onLogout={this.handleLogout.bind(this)}>
-              <Switch>
-                <Route exact path="/bookings">
-                  <BookingsView user={this.state.user} />
-                </Route>
-                <Route exact path="/calendar">
-                  <CalendarView user={this.state.user} />
-                </Route>
-                <Route exact path="/settings">
-                  <SettingsView user={this.state.user} updateUser={this.updateUser.bind(this)}/>
-                </Route>
-                {categoryRoutes}
-                <Route exact path="/">
-                  <HomeView />
-                </Route>
-              </Switch>
-            </DefaultView>
-          </Route>
-        </Switch>
-        <KommunicateChat />
-      </Router>
+      <>
+        <KommunicateChat user={this.state.user} />
+        <Router>
+          { !this.state.isLogin ? <Redirect to="/login" /> : this.state.gotoDefaultView && <Redirect to='/' /> }
+          <Switch>
+            <Route path="/login">
+              <AuthView onLoginSuccess={this.handleLogin.bind(this)}/>
+            </Route>
+            <Route path="/">
+              <DefaultView user={this.state.user} categories={this.state.categories} onLogout={this.handleLogout.bind(this)}>
+                <Switch>
+                  <Route exact path="/bookings">
+                    <BookingsView user={this.state.user} />
+                  </Route>
+                  <Route exact path="/calendar">
+                    <CalendarView user={this.state.user} />
+                  </Route>
+                  <Route exact path="/settings">
+                    <SettingsView user={this.state.user} updateUser={this.updateUser.bind(this)}/>
+                  </Route>
+                  {categoryRoutes}
+                  <Route exact path="/">
+                    <HomeView />
+                  </Route>
+                </Switch>
+              </DefaultView>
+            </Route>
+          </Switch>
+        </Router>
+      </>
     )
   };
 }
