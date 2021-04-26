@@ -47,7 +47,9 @@ class App extends Component {
             loading: false,
           });
         })
-        .catch(() => this.setState({ user: [], loading: false }));
+        .catch(() => {
+          this.setState({ user: [], loading: false })
+        });
     }
   }
 
@@ -57,7 +59,7 @@ class App extends Component {
       .then((user) => this.setState({user: user.data}))
       .catch((error) => {
         console.log(error.response);
-        this.setState({user: []});
+        this.setState({ user: [] });
       });
   }
 
