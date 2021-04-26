@@ -23,6 +23,20 @@ class DefaultView extends Component {
     };
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.location !== prevProps.location) {
+      if (isElectron()) {
+        if (window.location.hash.substring(1) !== this.state.selectedKeys[0]) {
+          this.setState({ selectedKeys: [window.location.hash.substring(1)] })
+        }
+      } else {
+        if (window.location.pathname !== this.state.selectedKeys[0]) {
+          this.setState({ selectedKeys: [window.location.pathname] })
+        }
+      }
+    }
+  }
+
   showPromiseConfirm = () => {
     const logout = () => { 
       localStorage.removeItem('authToken');
