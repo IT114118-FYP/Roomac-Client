@@ -57,8 +57,8 @@ class DefaultView extends Component {
       title = title && title.length > 0 ? title : c.title_en;
 
       return (
-        <Menu.Item key={'/categories/' + c.id} icon={<CaretRightOutlined />}>
-          <Link to={'/categories/' + c.id}>{title}</Link>
+        <Menu.Item key={'/categories-' + c.id} icon={<CaretRightOutlined />}>
+          <Link to={'/categories-' + c.id}>{title}</Link>
         </Menu.Item>
       )
     });

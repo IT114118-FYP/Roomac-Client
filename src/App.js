@@ -98,7 +98,7 @@ class App extends Component {
     }
 
     const categoryRoutes = this.state.categories.map((c) => c = 
-      <Route exact key={c.id} path={'/categories/' + c.id}>
+      <Route exact key={c.id} path={'/categories-' + c.id}>
         <ResourceView category={c} />
       </Route>
     );
