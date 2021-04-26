@@ -241,7 +241,7 @@ class BookingsView extends Component {
       <>
         <h1>{this.props.t('myBookings')} {!this.state.loading && <>({this.state.bookings.length} {this.props.t('results')})</>}</h1>
         <Spin spinning={this.state.loading}>
-          <Table columns={columns} dataSource={parseBookings()} />
+          <Table columns={columns} dataSource={parseBookings()} scroll={{ x: 1300 }} />
         </Spin>
 
         <Modal

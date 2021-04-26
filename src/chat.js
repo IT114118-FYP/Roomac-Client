@@ -24,6 +24,10 @@ class KommunicateChat extends Component {
       onInit: () => {
         window.Kommunicate?.updateChatContext({user_id: userId?.toString()});
         window.Kommunicate?.displayKommunicateWidget(userId !== undefined);
+
+        // Update card css to show the qr code
+        var css = ".km-carousel-card-header { height: 220px !important; } .km-carousel-card-img { height: 110% !important; }"
+        window.Kommunicate?.customizeWidgetCss(css);
       },
       "popupWidget": false,
       "automaticChatOpenOnNavigation": true
