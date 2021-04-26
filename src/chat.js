@@ -37,14 +37,14 @@ class KommunicateChat extends Component {
     var h = document.getElementsByTagName("head")[0];
     h.appendChild(s);
     
-    window.Kommunicate = m;
+    window.kommunicate = m;
     m._globals = kommunicateSettings;
   }
 
   createKommunicateIfNotExists() {
     // Should use this.state.isCreated
     if (window.Kommunicate === null || window.Kommunicate === undefined) {
-      this.createKommunicate(document, window.Kommunicate || {});
+      this.createKommunicate(document, window.kommunicate || {});
     }
   }
 
