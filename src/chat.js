@@ -12,12 +12,9 @@ class KommunicateChat extends Component {
     (function(d,m){
       var kommunicateSettings = {
         "appId": "34ed33c5a3d77be45defccb8514c422a5",
-        onInit: function() {
-          var chatContext = {
-            user_id: userId?.toString(),
-          };
-          window.Kommunicate.updateChatContext(chatContext);
-          window.Kommunicate.displayKommunicateWidget(userId !== undefined);
+        onInit: () => {
+          window.Kommunicate?.updateChatContext({user_id: userId?.toString()});
+          window.Kommunicate?.displayKommunicateWidget(userId !== undefined);
         },
         "popupWidget": false,
         "automaticChatOpenOnNavigation": true
@@ -37,8 +34,14 @@ class KommunicateChat extends Component {
   }
 
   componentDidUpdate() {
+    this.updateKommunicate();
+  }
+
+  updateKommunicate() {
     // On this.props.user update -> change display of Kommunicate Widget
-    window.Kommunicate.displayKommunicateWidget(this.props.user.id !== undefined);
+    let userId = this.props.user.id;
+    window.Kommunicate?.displayKommunicateWidget(userId !== undefined);
+    window.Kommunicate?.updateChatContext({user_id: userId?.toString()});
   }
 
   render() {
