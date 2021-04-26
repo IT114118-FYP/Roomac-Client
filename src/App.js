@@ -70,7 +70,9 @@ class App extends Component {
         this.setState({ user: user, isLogin: true, gotoDefaultView: true, categories: categories.data })
         console.log('-> Login')
       })
-      .catch(() => {});
+      .catch((error) => {
+        console.log(error.response);
+      });
   }
 
   handleLogout() {
