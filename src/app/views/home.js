@@ -92,7 +92,7 @@ class HomeView extends Component {
           dataSource={this.state.categories}
           renderItem={category => (
             <List.Item>
-              <Link to={'/categories/' + category.id}>
+              <Link to={'/categories-' + category.id}>
                 {getCard(category)}
               </Link>
             </List.Item>
