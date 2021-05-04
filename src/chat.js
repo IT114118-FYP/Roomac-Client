@@ -20,7 +20,7 @@ class KommunicateChat extends Component {
     let userId = this.props.user.id;
 
     var kommunicateSettings = {
-      "appId": "34ed33c5a3d77be45defccb8514c422a5",
+      "appId": "396c1757e3330d8b71c5ada4fd062dee7",
       onInit: () => {
         window.Kommunicate?.updateChatContext({user_id: userId?.toString()});
         window.Kommunicate?.displayKommunicateWidget(userId !== undefined);
