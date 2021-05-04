@@ -255,12 +255,7 @@ class BookingsView extends Component {
           <div className="displayQRCode">
             <QRCode 
               renderAs="svg" 
-              value={this.state.code} 
-              imageSettings={{
-                src: '/roomac.png',
-                height: 12,
-                width: 12
-              }}
+              value={this.state.code}
             />
           </div>
         </Modal>

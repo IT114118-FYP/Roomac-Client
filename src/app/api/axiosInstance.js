@@ -1,6 +1,6 @@
 import * as axios from "axios";
 
-const baseURLs = ["https://roomac.tatlead.com", "https://it114118-fyp.herokuapp.com"];
+const baseURLs = ["https://roomac.tatlead.com"]//, "https://it114118-fyp.herokuapp.com"];
 
 const getBaseURL = () => {
 	for (let i in baseURLs) {
