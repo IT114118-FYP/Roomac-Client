@@ -110,7 +110,7 @@ class AuthView extends Component {
           {languageOptions}
         </Select>
 
-        <Select defaultValue={getBaseURL()} style={{position: "fixed", left: 15, bottom: 15, width: 300}} onChange={(value) => setBaseURL(value)} disabled={this.state.loading} style={{display: 'none'}}>
+        <Select defaultValue={getBaseURL()} style={{position: "fixed", left: 15, bottom: 15, width: 300, display: 'none'}} onChange={(value) => setBaseURL(value)} disabled={this.state.loading}>
           {baseURLOptions}
         </Select>
 
