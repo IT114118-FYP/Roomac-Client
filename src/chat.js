@@ -18,11 +18,18 @@ class KommunicateChat extends Component {
 
   createKommunicate(d, m) {
     let userId = this.props.user.id;
+    let name = this.props.user.name;
+    let imageUrl = this.props.user.image_url;
+
+    console.log(name, imageUrl)
 
     var kommunicateSettings = {
       "appId": "396c1757e3330d8b71c5ada4fd062dee7",
       onInit: () => {
-        window.Kommunicate?.updateChatContext({user_id: userId?.toString()});
+        window.Kommunicate?.updateUser({
+          "displayName": name?.toString(),
+          "imageLink": imageUrl?.toString()
+        });
         window.Kommunicate?.displayKommunicateWidget(userId !== undefined);
 
         // Update card css to show the qr code
@@ -55,8 +62,14 @@ class KommunicateChat extends Component {
   updateKommunicate() {
     // On this.props.user update -> change display of Kommunicate Widget
     let userId = this.props.user.id;
+    let name = this.props.user.name;
+    let imageUrl = this.props.user.image_url;
+
     window.Kommunicate?.displayKommunicateWidget(userId !== undefined);
-    window.Kommunicate?.updateChatContext({user_id: userId?.toString()});
+    window.Kommunicate?.updateUser({
+      "displayName": name?.toString(),
+      "imageLink": imageUrl?.toString()
+    });
 
     if (userId === undefined) {
       window.Kommunicate?.logout();
