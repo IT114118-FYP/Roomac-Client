@@ -30,6 +30,7 @@ class KommunicateChat extends Component {
           "displayName": name?.toString(),
           "imageLink": imageUrl?.toString()
         });
+        window.Kommunicate?.updateChatContext({user_id: userId?.toString()});
         window.Kommunicate?.displayKommunicateWidget(userId !== undefined);
 
         // Update card css to show the qr code
@@ -66,6 +67,7 @@ class KommunicateChat extends Component {
     let imageUrl = this.props.user.image_url;
 
     window.Kommunicate?.displayKommunicateWidget(userId !== undefined);
+    window.Kommunicate?.updateChatContext({user_id: userId?.toString()});
     window.Kommunicate?.updateUser({
       "displayName": name?.toString(),
       "imageLink": imageUrl?.toString()
