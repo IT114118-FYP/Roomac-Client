@@ -74,6 +74,8 @@ class SettingsView extends Component {
       .then(() => {
         this.setState({ loading: false });
         openNotification('success', this.props.t('changePasswordSuccess'), this.props.t('changePasswordSuccessMessage'), 15, 'topRight');
+
+        setTimeout(this.props.onLogout, 5000);
       })
       .catch((error) => {
         this.setState({ loading: false });

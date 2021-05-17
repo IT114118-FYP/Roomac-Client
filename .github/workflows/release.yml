@@ -34,6 +34,15 @@ jobs:
         with:
           node-version: 12
 
+      # Install Snapcraft
+      - name: Install Snapcraft
+        uses: samuelmeuli/action-snapcraft@v1
+        # Only install Snapcraft on Ubuntu
+        if: startsWith(matrix.os, 'ubuntu')
+        with:
+          # Log in to Snap Store
+          snapcraft_token: ${{ secrets.snapcraft_token }}
+
       # Build/release Electron app
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
@@ -43,7 +52,7 @@ jobs:
           github_token: ${{ secrets.github_token }}
 
           # Disabling publishing to Snapcraft
-          args: "-c.snap.publish=github"
+          #args: "-c.snap.publish=github"
 
           # If the commit is tagged with a version (e.g. "v1.0.0"),
           # release the app after building

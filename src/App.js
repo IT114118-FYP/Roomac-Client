@@ -76,6 +76,7 @@ class App extends Component {
   }
 
   handleLogout() {
+    localStorage.removeItem('authToken');
     this.setState({ user: [], isLogin: false });
     console.log('-> Logout')
   }
@@ -122,7 +123,7 @@ class App extends Component {
                     <CalendarView user={this.state.user} />
                   </Route>
                   <Route exact path="/settings">
-                    <SettingsView user={this.state.user} updateUser={this.updateUser.bind(this)}/>
+                    <SettingsView user={this.state.user} updateUser={this.updateUser.bind(this)} onLogout={this.handleLogout.bind(this)} />
                   </Route>
                   {categoryRoutes}
                   <Route exact path="/">

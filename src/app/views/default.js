@@ -39,7 +39,6 @@ class DefaultView extends Component {
 
   showPromiseConfirm = () => {
     const logout = () => { 
-      localStorage.removeItem('authToken');
       this.props.onLogout();
     }
     confirm({
